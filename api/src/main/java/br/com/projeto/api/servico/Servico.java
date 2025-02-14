@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Service
-public class Servico implements Repositorio{
+public abstract class Servico implements Repositorio{
     
     @Autowired
     private Mensagem mensagem;
@@ -50,7 +50,7 @@ public class Servico implements Repositorio{
 
     @Override
     public void flush() {
-        
+
     }
 
 //    public ResponseEntity<?> editar(Filme obj){
