@@ -22,48 +22,48 @@ public class Controle {
     @Autowired
     private Servico servico;
     
-//    @PostMapping("/api")
-//    public ResponseEntity<?> cadastrar(@RequestBody Filme obj){
-//        return servico.cadastrar(obj);
-//    }
-//
-//    @GetMapping("/api")
-//    public ResponseEntity<?> selecionar() {
-//        return servico.selecionar();
-//    }
-//
+    @PostMapping("/api")
+    public ResponseEntity<?> cadastrar(@RequestBody Filme obj){
+        return servico.cadastrar(obj);
+    }
+
+    @GetMapping("/api")
+    public ResponseEntity<?> selecionar() {
+        return servico.selecionar();
+    }
+
     @GetMapping("")
     public String mensagem(){
         return "Hello World 1";
     }
 
     @GetMapping("/api/{id}")
-    public Filme selecionarPeloId(@PathVariable int id) {
-        return servico.findById(id);
+    public ResponseEntity<?> selecionarPeloId(@PathVariable int id) {
+        return servico.selecionarPeloId(id);
     }
 
-//    @PutMapping("/api")
-//    public ResponseEntity<?> editar(@RequestBody Filme obj) {
-//        return servico.editar(obj);
-//    }
-//
-//    @DeleteMapping("/api/{id}")
-//    public ResponseEntity<?> remover(@PathVariable int id){
-//        return servico.remover(id);
-//    }
-//
-//    @GetMapping("/api/maiorNota")
-//    public ResponseEntity<?> maiorNota() {
-//        return servico.mostraMaiorNota();
-//    }
-//
-//    @GetMapping("/api/popularidadeMaiorQue/{n}")
-//    public ResponseEntity<?> popularidadeMaiorQue(@PathVariable float n) {
-//        return servico.mostraPopularidadeMaiorQue(n);
-//    }
-//
-//    @GetMapping("/status")
-//    public ResponseEntity<?> status() {
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+    @PutMapping("/api")
+    public ResponseEntity<?> editar(@RequestBody Filme obj) {
+        return servico.editar(obj);
+    }
+
+    @DeleteMapping("/api/{id}")
+    public ResponseEntity<?> remover(@PathVariable int id){
+        return servico.remover(id);
+    }
+
+    @GetMapping("/api/maiorNota")
+    public ResponseEntity<?> maiorNota() {
+        return servico.mostraMaiorNota();
+    }
+
+    @GetMapping("/api/popularidadeMaiorQue/{n}")
+    public ResponseEntity<?> popularidadeMaiorQue(@PathVariable float n) {
+        return servico.mostraPopularidadeMaiorQue(n);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<?> status() {
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

@@ -16,12 +16,14 @@ public interface Repositorio extends JpaRepository<Filme, Integer> {
 
     Filme findById(int id);
 
-//    @Query(value="SELECT * FROM filmes WHERE vote_average = (select max(vote_average) from filmes)", nativeQuery = true)
-//    Filme maiorNota();
-//
-//    @Query(value="SELECT * FROM filmes WHERE popularity>:n", nativeQuery = true)
-//    List<Filme> popularidadeMaiorQue(float n);
-//
-//    int countById(int id);
+    Filme findByTitle(String title);
+
+    @Query(value="SELECT * FROM filmes WHERE vote_average = (select max(vote_average) from filmes)", nativeQuery = true)
+    Filme maiorNota();
+
+    @Query(value="SELECT * FROM filmes WHERE popularity>:n", nativeQuery = true)
+    List<Filme> popularidadeMaiorQue(float n);
+
+    int countById(int id);
 
 }

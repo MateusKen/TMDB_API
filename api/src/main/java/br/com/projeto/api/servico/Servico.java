@@ -1,6 +1,6 @@
 package br.com.projeto.api.servico;
 
-import org.hibernate.ObjectNotFoundException;
+import br.com.projeto.api.resources.exceptions.StandardError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +10,11 @@ import br.com.projeto.api.modelo.Filme;
 import br.com.projeto.api.modelo.Mensagem;
 import br.com.projeto.api.repositorio.Repositorio;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.List;
 
 @Service
-public abstract class Servico implements Repositorio{
+public class Servico{
     
     @Autowired
     private Mensagem mensagem;
@@ -22,74 +22,68 @@ public abstract class Servico implements Repositorio{
     @Autowired
     private Repositorio acao;
 
-//    public ResponseEntity<?> cadastrar(Filme obj){
-//
-//        if(obj.getTitle().isEmpty()){
-//            mensagem.setMensagem("Titulo não pode ser vazio");
-//            return new ResponseEntity<>(mensagem, HttpStatus.BAD_REQUEST);
-//        }else{
-//            return new ResponseEntity<>(acao.save(obj), HttpStatus.CREATED);
-//        }
-//    }
-
-//    public ResponseEntity<?> selecionar(){
-//        return new ResponseEntity<>(acao.findAll(), HttpStatus.OK);
-//    }
-
-    @Override
-    public List<Filme> findAll() {
-        return List.of();
+    public ResponseEntity<?> cadastrar(Filme obj){
+        Optional<Filme> obj2 = Optional.ofNullable(obj);
+        if(obj.getTitle().isEmpty()){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Título não pode ser vazio");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }else if(obj2 != null){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.CONFLICT.value(), "Filme já cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        } else{
+            return new ResponseEntity<>(acao.save(obj), HttpStatus.CREATED);
+        }
     }
 
-    @Override
-    public Filme findById(int id){
+    public ResponseEntity<?> selecionar(){
+        return new ResponseEntity<>(acao.findAll(), HttpStatus.OK);
+    }
 
+    public ResponseEntity<?> selecionarPeloId(int id){
         Optional<Filme> obj = Optional.ofNullable(acao.findById(id));
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Filme não encontrado"));
+        if(obj.isEmpty()){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Filme não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }else{
+            return new ResponseEntity<>(obj.get(), HttpStatus.OK);
+        }
     }
 
-    @Override
-    public void flush() {
-
+    public ResponseEntity<?> editar(Filme obj){
+        Optional<Filme> obj2 = Optional.ofNullable(obj);
+        if(acao.countById(obj.getId()) == 0){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Filme não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }else if(obj.getTitle().isEmpty()){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), "Título não pode ser vazio");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }else if(obj2 != null){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.CONFLICT.value(), "Filme já cadastrado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }else{
+            return new ResponseEntity<>(acao.save(obj), HttpStatus.OK);
+        }
     }
 
-//    public ResponseEntity<?> editar(Filme obj){
-//
-//        if(acao.countById(obj.getId()) == 0){
-//            mensagem.setMensagem("Código não encontrado");
-//            return new ResponseEntity<>(mensagem, HttpStatus.NOT_FOUND);
-//        }else if(obj.getTitle().isEmpty()){
-//            mensagem.setMensagem("Nome não pode ser vazio");
-//            return new ResponseEntity<>(mensagem, HttpStatus.BAD_REQUEST);
-//        }else{
-//            return new ResponseEntity<>(acao.save(obj), HttpStatus.OK);
-//        }
-//    }
-//
-//    public ResponseEntity<?> remover(int id){
-//
-//        if(acao.countById(id) == 0){
-//            mensagem.setMensagem("Código não encontrado");
-//            return new ResponseEntity<>(mensagem, HttpStatus.BAD_REQUEST);
-//        }else{
-//            Filme obj = acao.findById(id);
-//            acao.delete(obj);
-//            mensagem.setMensagem("Registro removido com sucesso");
-//            return new ResponseEntity<>(mensagem, HttpStatus.OK);
-//        }
-//    }
-//
-//    public ResponseEntity<?> mostraMaiorNota(){
-//        return new ResponseEntity<>(acao.maiorNota(), HttpStatus.OK);
-//    }
-//
-//    public ResponseEntity<?> mostraPopularidadeMaiorQue(float n){
-//        return new ResponseEntity<>(acao.popularidadeMaiorQue(n), HttpStatus.OK);
-//    }
+    public ResponseEntity<?> remover(int id){
 
-//    @Override
-//    public Filme findById(Integer id){
-//        Optional<Filme> obj =  acao.findById(id);
-//        return obj.orElseThrow(() -> new ObjectNotFoundException("Filme não encontrado"));
-//    }
+        if(acao.countById(id) == 0){
+            StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), "Filme não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }else{
+            Filme obj = acao.findById(id);
+            acao.delete(obj);
+            mensagem.setMensagem("Registro removido com sucesso");
+            return new ResponseEntity<>(mensagem, HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<?> mostraMaiorNota(){
+        return new ResponseEntity<>(acao.maiorNota(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> mostraPopularidadeMaiorQue(float n){
+        return new ResponseEntity<>(acao.popularidadeMaiorQue(n), HttpStatus.OK);
+    }
+
 }

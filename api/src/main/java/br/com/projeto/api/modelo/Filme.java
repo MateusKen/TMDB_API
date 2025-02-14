@@ -24,6 +24,7 @@ public class Filme {
     private int id;
 
     @NotEmpty(message = "Título não pode ser vazio")
+
     private String title;
     private String overview;
     private String release_date;

@@ -13,5 +13,4 @@ public class StandardError {
     private LocalDateTime timestamp;
     Integer status;
     String error;
-    String path;
 }
