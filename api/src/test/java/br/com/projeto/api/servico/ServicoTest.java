@@ -34,7 +34,6 @@ class ServicoTest {
     private Repositorio repositorio;
     private Filme filme;
     private Optional<Filme> optionalFilme;
-    private Mensagem mensagem;
 
     @BeforeEach
     void setUp() {
@@ -59,13 +58,13 @@ class ServicoTest {
 
     @Test
     void whenCadastrarThenReturnConflict() {
-        Mockito.when(repositorio.save(Mockito.any())).thenReturn(null);
+        Mockito.when(repositorio.findByTitle(Mockito.anyString())).thenReturn(filme);
         ResponseEntity<?> response = servico.cadastrar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.CONFLICT).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
-    void whenSelecionarThenReturnOK() {
+    void whenSelecionarThenReturnOk() {
         Mockito.when(repositorio.findAll()).thenReturn(List.of(filme));
 
         ResponseEntity<?> response = servico.selecionar();
@@ -73,7 +72,7 @@ class ServicoTest {
     }
 
     @Test
-    void whenSelecionarPorIdThenReturnOK() {
+    void whenSelecionarPorIdThenReturnOk() {
         Mockito.when(repositorio.findById(Mockito.anyInt())).thenReturn(filme);
         ResponseEntity<?> response = servico.selecionarPeloId(ID);
 
@@ -107,13 +106,13 @@ class ServicoTest {
     @Test
     void whenEditarThenReturnConflict() {
         Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
-        Mockito.when(repositorio.save(Mockito.any())).thenReturn(null);
+        Mockito.when(repositorio.findByTitle(Mockito.anyString())).thenReturn(filme);
         ResponseEntity<?> response = servico.editar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.CONFLICT).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
-    void whenEditarThenReturnOK() {
+    void whenEditarThenReturnOk() {
         Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
         Mockito.when(repositorio.save(Mockito.any())).thenReturn(filme);
         ResponseEntity<?> response = servico.editar(filme);
@@ -128,7 +127,7 @@ class ServicoTest {
     }
 
     @Test
-    void whenRemoverThenReturnOK() {
+    void whenRemoverThenReturnOk() {
         Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
         ResponseEntity<?> response = servico.remover(ID);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).build().getStatusCode(), response.getStatusCode());
