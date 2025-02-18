@@ -1,5 +1,6 @@
 package br.com.projeto.api.servico;
 
+import br.com.projeto.api.modelo.Mensagem;
 import br.com.projeto.api.modelo.Filme;
 import br.com.projeto.api.repositorio.Repositorio;
 import br.com.projeto.api.resources.exceptions.StandardError;
@@ -33,7 +34,7 @@ class ServicoTest {
     private Repositorio repositorio;
     private Filme filme;
     private Optional<Filme> optionalFilme;
-    private Mensagem
+    private Mensagem mensagem;
 
     @BeforeEach
     void setUp() {
@@ -134,11 +135,17 @@ class ServicoTest {
     }
 
     @Test
-    void mostraMaiorNota() {
+    void whenMostraMaiorNotaThenReturnOk() {
+        Mockito.when(repositorio.maiorNota()).thenReturn(filme);
+        ResponseEntity<?> response = servico.mostraMaiorNota();
+        Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(filme), response);
     }
 
     @Test
-    void mostraPopularidadeMaiorQue() {
+    void whenMostraPopularidadeMaiorQueThenReturnOk() {
+        Mockito.when(repositorio.popularidadeMaiorQue(Mockito.anyFloat())).thenReturn(List.of(filme));
+        ResponseEntity<?> response = servico.mostraPopularidadeMaiorQue(10);
+        Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(List.of(filme)), response);
     }
 
     private void startFilme(){
