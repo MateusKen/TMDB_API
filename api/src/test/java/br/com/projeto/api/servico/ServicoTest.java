@@ -1,9 +1,7 @@
 package br.com.projeto.api.servico;
 
-import br.com.projeto.api.modelo.Mensagem;
 import br.com.projeto.api.modelo.Filme;
 import br.com.projeto.api.repositorio.Repositorio;
-import br.com.projeto.api.resources.exceptions.StandardError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,14 +11,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ServicoTest {
