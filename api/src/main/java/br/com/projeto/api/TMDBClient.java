@@ -12,8 +12,8 @@ public class TMDBClient {
     Dotenv dotenv = Dotenv.load();
     private final String API_KEY;
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
-    private OkHttpClient client;
-    private Gson gson;
+    private final OkHttpClient client;
+    private final Gson gson;
 
     public TMDBClient() {
         this.client = new OkHttpClient();

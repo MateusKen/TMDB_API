@@ -26,8 +26,8 @@ class ServicoTest {
 
     @Mock
     private Repositorio repositorio;
+
     private Filme filme;
-    private Optional<Filme> optionalFilme;
 
     @BeforeEach
     void setUp() {
@@ -151,14 +151,5 @@ class ServicoTest {
                 .vote_average(10)
                 .vote_count(100)
                 .build();
-        optionalFilme = Optional.of(Filme.builder()
-                .id(ID)
-                .title("Fight Club")
-                .overview("a fighting club")
-                .popularity(10)
-                .release_date("10/10")
-                .vote_average(10)
-                .vote_count(100)
-                .build());
     }
 }

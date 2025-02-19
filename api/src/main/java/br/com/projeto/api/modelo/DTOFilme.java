@@ -1,10 +1,11 @@
 package br.com.projeto.api.modelo;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jdk.jshell.Snippet;
+import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Getter @Setter
 public class DTOFilme {
