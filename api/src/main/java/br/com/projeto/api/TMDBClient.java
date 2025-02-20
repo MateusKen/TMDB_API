@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import br.com.projeto.api.modelo.DTOFilme;
 import io.github.cdimascio.dotenv.Dotenv;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -31,7 +32,12 @@ public class TMDBClient {
                 .addHeader("Authorization", "Bearer " + API_KEY)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try  {
+            //Response response = client.newCall(request).execute();
+            Response response;
+            Call call;
+            call = client.newCall(request);
+            response = call.execute();
             if (response.isSuccessful()) {
                 String responseData = response.body().string();
                 // Parse the JSON response to a Movie object

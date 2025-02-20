@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 public class Controle {
-    
+
     @Autowired
     private Servico servico;
-    
+
     @PostMapping("/api")
     public ResponseEntity<?> cadastrar(@RequestBody Filme obj){
         return servico.cadastrar(obj);

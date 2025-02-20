@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.springframework.web.ErrorResponse;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,11 +24,12 @@ public class Filme {
     private int id;
 
     @NotEmpty(message = "Título não pode ser vazio")
-
     private String title;
+
     private String overview;
     private String release_date;
     private float popularity;
     private float vote_average;
     private int vote_count;
+
 }

@@ -84,14 +84,26 @@ public class Main {
 
         System.out.println();
 
-        Filme filme = new Filme();
-        filme.setId(idEditar);
-        filme.setTitle(titulo);
-        filme.setOverview(descricao);
-        filme.setRelease_date(dataLancamento);
-        filme.setPopularity(popularidade);
-        filme.setVote_average(notaMedia);
-        filme.setVote_count(numeroVotos);
+        var filme = Filme.builder()
+                .id(idEditar)
+                .title(titulo)
+                .overview(descricao)
+                .release_date(dataLancamento)
+                .popularity(popularidade)
+                .vote_average(notaMedia)
+                .vote_count(numeroVotos)
+                .build();
+
+//        Filme filme = Filme.builder()
+//                .id(idEditar)
+//                .title(titulo)
+//                .overview(descricao)
+//                .release_date(dataLancamento)
+//                .popularity(popularidade)
+//                .vote_average(notaMedia)
+//                .vote_count(numeroVotos)
+//                .build();
+
         try {
             restTemplate.put(url, filme);
             System.out.println("Filme editado com sucesso!");

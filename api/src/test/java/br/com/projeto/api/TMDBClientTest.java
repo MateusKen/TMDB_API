@@ -32,6 +32,7 @@ class TMDBClientTest {
     @Mock
     private Call call;
 
+    private Request request;
     private Gson gson;
     private DTOFilme dtoFilme;
 
@@ -40,13 +41,15 @@ class TMDBClientTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         startDTOFilme();
+        startResponse();
+        startRequest();
     }
 
     @Test
     void whenGetMovieDetailsThenReturnSuccessful() throws IOException {
-        when(client.newCall(any(Request.class))).thenReturn(call);
+        when(client.newCall(request)).thenReturn(call);
         when(call.execute()).thenReturn(response);
-        //when(response.isSuccessful()).thenReturn(true);
+        when(response.isSuccessful()).thenReturn(true);
         //when(response.body()).thenReturn(dtoFilme);
         Optional<DTOFilme> obj = Optional.of(tmdbClient.getMovieDetails(1));
         assertEquals(DTOFilme.class, obj.getClass());
@@ -71,14 +74,16 @@ class TMDBClientTest {
 
     void startResponse(){
         response = new Response.Builder()
-                .request(new Request.Builder().url("https://example.com").build())
-                .protocol(Protocol.HTTP_1_1)
                 .code(200) // Status code
-                .message("OK") // Status message
-                .body(ResponseBody.create(
-                        MediaType.get("application/json"),
-                        "{\"key\":\"value\"}" // Mocked JSON response body
-                ))
+                .build();
+    }
+
+    void startRequest(){
+        request = new Request.Builder()
+                .url("https://api.themoviedb.org/3/movie/1")
+                .get()
+                .addHeader("Accept", "application/json")
+                //.addHeader("Authorization", "Bearer " + tmdbClient.API_KEY)
                 .build();
     }
 }

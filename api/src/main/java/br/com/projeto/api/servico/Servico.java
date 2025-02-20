@@ -19,6 +19,7 @@ public class Servico{
 
     public ResponseEntity<?> cadastrar(Filme obj){
         Optional<Filme> obj2 = Optional.ofNullable(acao.findByTitle(obj.getTitle()));
+
         if(obj.getTitle().isEmpty()){
             StandardError error = StandardError.BadRequest();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
@@ -45,16 +46,12 @@ public class Servico{
     }
 
     public ResponseEntity<?> editar(Filme obj){
-        Optional<Filme> obj2 = Optional.ofNullable(acao.findByTitle(obj.getTitle()));
         if(acao.countById(obj.getId()) == 0){
             StandardError error = StandardError.NotFound();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }else if(obj.getTitle().isEmpty()){
+        }else if(obj.getTitle().isEmpty() || obj.getTitle() == null){
             StandardError error = StandardError.BadRequest();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-        }else if(obj2.isPresent()){
-            StandardError error = StandardError.Conflict();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }else{
             return new ResponseEntity<>(acao.save(obj), HttpStatus.OK);
         }
@@ -68,7 +65,7 @@ public class Servico{
         }else{
             Filme obj = acao.findById(id);
             acao.delete(obj);
-            return new ResponseEntity<>("Filme removido com sucesso!", HttpStatus.OK);
+            return new ResponseEntity<>("Filme removido com sucesso!", HttpStatus.NO_CONTENT);
         }
     }
 
