@@ -1,7 +1,6 @@
-package br.com.projeto.api.infra;
+package br.com.projeto.api.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
-import okhttp3.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
