@@ -1,6 +1,6 @@
 package br.com.projeto.api;
 
-import br.com.projeto.api.modelo.DTOFilme;
+import br.com.projeto.api.modelo.filme.DTOFilme;
 import com.google.gson.Gson;
 import okhttp3.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,13 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class TMDBClientTest {

@@ -1,4 +1,4 @@
-package br.com.projeto.api.modelo;
+package br.com.projeto.api.modelo.filme;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import org.springframework.web.ErrorResponse;
 
 @AllArgsConstructor
 @NoArgsConstructor

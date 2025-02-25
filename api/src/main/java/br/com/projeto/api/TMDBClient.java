@@ -2,7 +2,7 @@ package br.com.projeto.api;
 
 import com.google.gson.Gson;
 
-import br.com.projeto.api.modelo.DTOFilme;
+import br.com.projeto.api.modelo.filme.DTOFilme;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;

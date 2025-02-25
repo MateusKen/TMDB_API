@@ -1,6 +1,6 @@
 package br.com.projeto.api.servico;
 
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.repositorio.Repositorio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 class ServicoTest {

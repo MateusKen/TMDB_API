@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.repositorio.Repositorio;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package br.com.projeto.api;
 
-import br.com.projeto.api.modelo.DTOFilme;
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.DTOFilme;
+import br.com.projeto.api.modelo.filme.Filme;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,15 +10,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class MainTest {
 

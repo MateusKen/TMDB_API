@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.Filme;
 
 @Repository
 public interface Repositorio extends JpaRepository<Filme, Integer> {

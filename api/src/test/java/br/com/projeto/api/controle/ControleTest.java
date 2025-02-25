@@ -1,17 +1,14 @@
 package br.com.projeto.api.controle;
 
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.servico.Servico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;

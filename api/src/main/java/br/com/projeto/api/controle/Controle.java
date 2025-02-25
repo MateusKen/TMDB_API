@@ -2,7 +2,7 @@ package br.com.projeto.api.controle;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.servico.Servico;
 
 import org.springframework.beans.factory.annotation.Autowired;

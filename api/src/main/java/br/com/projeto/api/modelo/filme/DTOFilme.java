@@ -1,6 +1,5 @@
-package br.com.projeto.api.modelo;
+package br.com.projeto.api.modelo.filme;
 
-import jdk.jshell.Snippet;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 

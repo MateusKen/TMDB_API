@@ -3,8 +3,8 @@ package br.com.projeto.api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.projeto.api.modelo.DTOFilme;
-import br.com.projeto.api.modelo.Filme;
+import br.com.projeto.api.modelo.filme.DTOFilme;
+import br.com.projeto.api.modelo.filme.Filme;
 import java.util.Scanner;
 
 public class Main {
