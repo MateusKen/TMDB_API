@@ -58,7 +58,7 @@ public class Main {
 
     public static void editar() {
         System.out.println("Digite o ID do filme:");
-        int idEditar = scanner.nextInt();
+        Long idEditar = scanner.nextLong();
         scanner.nextLine();
 
         System.out.println("Digite o novo título do filme:");

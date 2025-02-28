@@ -20,7 +20,7 @@ public class Filme {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotEmpty(message = "Título não pode ser vazio")
     private String title;

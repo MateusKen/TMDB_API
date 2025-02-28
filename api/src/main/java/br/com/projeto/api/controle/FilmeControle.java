@@ -3,7 +3,7 @@ package br.com.projeto.api.controle;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.projeto.api.modelo.filme.Filme;
-import br.com.projeto.api.servico.Servico;
+import br.com.projeto.api.servico.FilmeServico;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,19 +17,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-public class Controle {
+public class FilmeControle {
 
     @Autowired
-    private Servico servico;
+    private FilmeServico filmeServico;
 
     @PostMapping("/api")
     public ResponseEntity<?> cadastrar(@RequestBody Filme obj){
-        return servico.cadastrar(obj);
+        return filmeServico.cadastrar(obj);
     }
 
     @GetMapping("/api")
     public ResponseEntity<?> selecionar() {
-        return servico.selecionar();
+        return filmeServico.selecionar();
     }
 
     @GetMapping("")
@@ -38,28 +38,28 @@ public class Controle {
     }
 
     @GetMapping("/api/{id}")
-    public ResponseEntity<?> selecionarPeloId(@PathVariable int id) {
-        return servico.selecionarPeloId(id);
+    public ResponseEntity<?> selecionarPeloId(@PathVariable Long id) {
+        return filmeServico.selecionarPeloId(id);
     }
 
     @PutMapping("/api")
     public ResponseEntity<?> editar(@RequestBody Filme obj) {
-        return servico.editar(obj);
+        return filmeServico.editar(obj);
     }
 
     @DeleteMapping("/api/{id}")
-    public ResponseEntity<?> remover(@PathVariable int id){
-        return servico.remover(id);
+    public ResponseEntity<?> remover(@PathVariable Long id){
+        return filmeServico.remover(id);
     }
 
     @GetMapping("/api/maiorNota")
     public ResponseEntity<?> maiorNota() {
-        return servico.mostraMaiorNota();
+        return filmeServico.mostraMaiorNota();
     }
 
     @GetMapping("/api/popularidadeMaiorQue/{n}")
     public ResponseEntity<?> popularidadeMaiorQue(@PathVariable float n) {
-        return servico.mostraPopularidadeMaiorQue(n);
+        return filmeServico.mostraPopularidadeMaiorQue(n);
     }
 
     @GetMapping("/status")

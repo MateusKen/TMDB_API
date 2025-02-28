@@ -1,5 +1,6 @@
 package br.com.projeto.api.servico;
 
+import br.com.projeto.api.modelo.filme.FilmeRepository;
 import br.com.projeto.api.resources.exceptions.StandardError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,15 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import br.com.projeto.api.modelo.filme.Filme;
-import br.com.projeto.api.repositorio.Repositorio;
 
 import java.util.Optional;
 
 @Service
-public class Servico{
+public class FilmeServico {
 
     @Autowired
-    private Repositorio acao;
+    private FilmeRepository acao;
 
     public ResponseEntity<?> cadastrar(Filme obj){
         Optional<Filme> obj2 = Optional.ofNullable(acao.findByTitle(obj.getTitle()));
@@ -35,8 +35,8 @@ public class Servico{
         return new ResponseEntity<>(acao.findAll(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> selecionarPeloId(int id){
-        Optional<Filme> obj = Optional.ofNullable(acao.findById(id));
+    public ResponseEntity<?> selecionarPeloId(Long id){
+        Optional<Filme> obj = acao.findById(id);
         if(obj.isEmpty()){
             StandardError error = StandardError.NotFound();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -57,16 +57,14 @@ public class Servico{
         }
     }
 
-    public ResponseEntity<?> remover(int id){
-
-        if(acao.countById(id) == 0){
-            StandardError error = StandardError.NotFound();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }else{
-            Filme obj = acao.findById(id);
-            acao.delete(obj);
+    public ResponseEntity<?> remover(Long id){
+        Optional<Filme> obj = acao.findById(id);
+        if(obj.isPresent()){
+            acao.deleteById(id);
             return new ResponseEntity<>("Filme removido com sucesso!", HttpStatus.NO_CONTENT);
         }
+        StandardError error = StandardError.NotFound();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     public ResponseEntity<?> mostraMaiorNota(){

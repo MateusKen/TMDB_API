@@ -157,7 +157,7 @@ class MainTest {
 
     void startFilme(){
         filme = Filme.builder()
-                .id(1)
+                .id(1L)
                 .title("Filme")
                 .overview("Overview")
                 .release_date("2021-01-01")

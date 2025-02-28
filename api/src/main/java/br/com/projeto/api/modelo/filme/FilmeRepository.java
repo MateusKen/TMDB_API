@@ -1,15 +1,14 @@
-package br.com.projeto.api.repositorio;
+package br.com.projeto.api.modelo.filme;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.projeto.api.modelo.filme.Filme;
-
 @Repository
-public interface Repositorio extends JpaRepository<Filme, Integer> {
+public interface FilmeRepository extends JpaRepository<Filme, Long> {
     
     List<Filme> findAll();
 
@@ -23,6 +22,5 @@ public interface Repositorio extends JpaRepository<Filme, Integer> {
     @Query(value="SELECT * FROM filmes WHERE popularity>:n", nativeQuery = true)
     List<Filme> popularidadeMaiorQue(float n);
 
-    int countById(int id);
-
+    int countById(Long id);
 }

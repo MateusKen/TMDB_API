@@ -1,7 +1,7 @@
 package br.com.projeto.api.controle;
 
 import br.com.projeto.api.modelo.filme.Filme;
-import br.com.projeto.api.servico.Servico;
+import br.com.projeto.api.servico.FilmeServico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,13 +16,13 @@ import static org.mockito.Mockito.when;
 
 class ControleTest {
 
-    public static final int ID = 1;
+    public static final Long ID = 1L;
 
     @InjectMocks
-    private Controle controle;
+    private FilmeControle controle;
 
     @Mock
-    private Servico servico;
+    private FilmeServico filmeServico;
 
     private Filme filme;
 
@@ -34,7 +34,7 @@ class ControleTest {
 
     @Test
     void whenCadastrarThenReturnOk() {
-        when(servico.cadastrar(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.cadastrar(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.cadastrar(filme);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -42,7 +42,7 @@ class ControleTest {
 
     @Test
     void whenSelecionarReturnOk() {
-        when(servico.selecionar()).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.selecionar()).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.selecionar();
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -54,35 +54,35 @@ class ControleTest {
 
     @Test
     void whenSelecionarPeloIdThenReturnOk() {
-        when(servico.selecionarPeloId(anyInt())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.selecionarPeloId(anyLong())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.selecionarPeloId(filme.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void whenEditarThenReturnOk() {
-        when(servico.editar(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.editar(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.editar(filme);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void whenRemoverThenReturnOk() {
-        when(servico.remover(anyInt())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.remover(anyLong())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.remover(filme.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void whenMaiorNotaThenReturnOk() {
-        when(servico.mostraMaiorNota()).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.mostraMaiorNota()).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.maiorNota();
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void whenPopularidadeMaiorQueThenReturnOk() {
-        when(servico.mostraPopularidadeMaiorQue(anyFloat())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(filmeServico.mostraPopularidadeMaiorQue(anyFloat())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         ResponseEntity<?> response = controle.popularidadeMaiorQue(anyFloat());
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }

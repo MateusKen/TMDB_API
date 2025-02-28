@@ -1,7 +1,7 @@
 package br.com.projeto.api.servico;
 
 import br.com.projeto.api.modelo.filme.Filme;
-import br.com.projeto.api.repositorio.Repositorio;
+import br.com.projeto.api.modelo.filme.FilmeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,17 +14,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
-class ServicoTest {
+class FilmeServicoTest {
 
-    public static final int ID = 1;
+    public static final Long ID = Long.valueOf(1);
 
     @InjectMocks
-    private Servico servico;
+    private FilmeServico filmeServico;
 
     @Mock
-    private Repositorio repositorio;
+    private FilmeRepository repositorio;
 
     private Filme filme;
 
@@ -38,21 +39,21 @@ class ServicoTest {
     void whenCadastrarThenReturnCreated() {
         Mockito.when(repositorio.save(Mockito.any())).thenReturn(filme);
 
-        ResponseEntity<?> response = servico.cadastrar(filme);
+        ResponseEntity<?> response = filmeServico.cadastrar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.CREATED).body(filme), response);
     }
 
     @Test
     void whenCadastrarThenReturnBadRequest() {
         filme.setTitle("");
-        ResponseEntity<?> response = servico.cadastrar(filme);
+        ResponseEntity<?> response = filmeServico.cadastrar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.BAD_REQUEST).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenCadastrarThenReturnConflict() {
         Mockito.when(repositorio.findByTitle(Mockito.anyString())).thenReturn(filme);
-        ResponseEntity<?> response = servico.cadastrar(filme);
+        ResponseEntity<?> response = filmeServico.cadastrar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.CONFLICT).build().getStatusCode(), response.getStatusCode());
     }
 
@@ -60,83 +61,83 @@ class ServicoTest {
     void whenSelecionarThenReturnOk() {
         Mockito.when(repositorio.findAll()).thenReturn(List.of(filme));
 
-        ResponseEntity<?> response = servico.selecionar();
+        ResponseEntity<?> response = filmeServico.selecionar();
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(List.of(filme)), response);
     }
 
     @Test
     void whenSelecionarPorIdThenReturnOk() {
-        Mockito.when(repositorio.findById(Mockito.anyInt())).thenReturn(filme);
-        ResponseEntity<?> response = servico.selecionarPeloId(ID);
+        Mockito.when(repositorio.findById(Mockito.anyLong())).thenReturn(Optional.ofNullable(filme));
+        ResponseEntity<?> response = filmeServico.selecionarPeloId(ID);
 
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(filme), response);
     }
 
     @Test
     void whenSelecionarPorIdThenReturnNotFound() {
-        Mockito.when(repositorio.findById(Mockito.anyInt())).thenReturn(null);
-        ResponseEntity<?> response = servico.selecionarPeloId(ID);
+        Mockito.when(repositorio.findById(Mockito.anyLong())).thenReturn(null);
+        ResponseEntity<?> response = filmeServico.selecionarPeloId(ID);
 
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.NOT_FOUND).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenEditarThenReturnNotFound() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(0);
-        ResponseEntity<?> response = servico.editar(filme);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(0);
+        ResponseEntity<?> response = filmeServico.editar(filme);
 
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.NOT_FOUND).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenEditarThenReturnBadRequest() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
         filme.setTitle("");
-        ResponseEntity<?> response = servico.editar(filme);
+        ResponseEntity<?> response = filmeServico.editar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.BAD_REQUEST).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenEditarThenReturnConflict() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
         Mockito.when(repositorio.findByTitle(Mockito.anyString())).thenReturn(filme);
-        ResponseEntity<?> response = servico.editar(filme);
+        ResponseEntity<?> response = filmeServico.editar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.CONFLICT).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenEditarThenReturnOk() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
         Mockito.when(repositorio.save(Mockito.any())).thenReturn(filme);
-        ResponseEntity<?> response = servico.editar(filme);
+        ResponseEntity<?> response = filmeServico.editar(filme);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(filme), response);
     }
 
     @Test
     void whenRemoverThenReturnNotFound() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(0);
-        ResponseEntity<?> response = servico.remover(ID);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(0);
+        ResponseEntity<?> response = filmeServico.remover(ID);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.NOT_FOUND).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenRemoverThenReturnOk() {
-        Mockito.when(repositorio.countById(Mockito.anyInt())).thenReturn(1);
-        ResponseEntity<?> response = servico.remover(ID);
+        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
+        ResponseEntity<?> response = filmeServico.remover(ID);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
     void whenMostraMaiorNotaThenReturnOk() {
         Mockito.when(repositorio.maiorNota()).thenReturn(filme);
-        ResponseEntity<?> response = servico.mostraMaiorNota();
+        ResponseEntity<?> response = filmeServico.mostraMaiorNota();
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(filme), response);
     }
 
     @Test
     void whenMostraPopularidadeMaiorQueThenReturnOk() {
         Mockito.when(repositorio.popularidadeMaiorQue(Mockito.anyFloat())).thenReturn(List.of(filme));
-        ResponseEntity<?> response = servico.mostraPopularidadeMaiorQue(10);
+        ResponseEntity<?> response = filmeServico.mostraPopularidadeMaiorQue(10);
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).body(List.of(filme)), response);
     }
 
