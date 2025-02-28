@@ -3,7 +3,6 @@ package br.com.projeto.api.controle;
 import br.com.projeto.api.modelo.interacoes.favoritar.DadosFavoritarFilme;
 import br.com.projeto.api.modelo.interacoes.favoritar.DadosTransferenciaFavoritar;
 import br.com.projeto.api.servico.FavoritarServico;
-import br.com.projeto.api.servico.FilmeServico;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ public class FavoritarController {
 
     @Autowired
     private FavoritarServico favoritarServico;
-    @Autowired
-    private FilmeServico filmeServico;
 
     @PostMapping
     @Transactional
