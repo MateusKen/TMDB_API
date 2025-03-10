@@ -49,7 +49,7 @@ public class FilmeServico {
         if(acao.countById(obj.getId()) == 0){
             StandardError error = StandardError.NotFound();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }else if(obj.getTitle().isEmpty() || obj.getTitle() == null){
+        }else if(obj.getTitle().isEmpty()){
             StandardError error = StandardError.BadRequest();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }else{

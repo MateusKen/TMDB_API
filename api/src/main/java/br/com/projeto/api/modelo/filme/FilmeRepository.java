@@ -23,4 +23,6 @@ public interface FilmeRepository extends JpaRepository<Filme, Long> {
     List<Filme> popularidadeMaiorQue(float n);
 
     int countById(Long id);
+
+    boolean existsFilmeByTitle(String title);
 }

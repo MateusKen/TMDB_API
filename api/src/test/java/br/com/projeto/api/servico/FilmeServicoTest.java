@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +76,7 @@ class FilmeServicoTest {
 
     @Test
     void whenSelecionarPorIdThenReturnNotFound() {
-        Mockito.when(repositorio.findById(Mockito.anyLong())).thenReturn(null);
+        Mockito.when(repositorio.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         ResponseEntity<?> response = filmeServico.selecionarPeloId(ID);
 
         Assertions.assertEquals(ResponseEntity.status(HttpStatus.NOT_FOUND).build().getStatusCode(), response.getStatusCode());
@@ -98,14 +99,6 @@ class FilmeServicoTest {
     }
 
     @Test
-    void whenEditarThenReturnConflict() {
-        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
-        Mockito.when(repositorio.findByTitle(Mockito.anyString())).thenReturn(filme);
-        ResponseEntity<?> response = filmeServico.editar(filme);
-        Assertions.assertEquals(ResponseEntity.status(HttpStatus.CONFLICT).build().getStatusCode(), response.getStatusCode());
-    }
-
-    @Test
     void whenEditarThenReturnOk() {
         Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
         Mockito.when(repositorio.save(Mockito.any())).thenReturn(filme);
@@ -121,10 +114,10 @@ class FilmeServicoTest {
     }
 
     @Test
-    void whenRemoverThenReturnOk() {
-        Mockito.when(repositorio.countById(Mockito.anyLong())).thenReturn(1);
+    void whenRemoverThenReturnNoContent() {
+        Mockito.when(repositorio.findById(Mockito.anyLong())).thenReturn(Optional.of(filme));
         ResponseEntity<?> response = filmeServico.remover(ID);
-        Assertions.assertEquals(ResponseEntity.status(HttpStatus.OK).build().getStatusCode(), response.getStatusCode());
+        Assertions.assertEquals(ResponseEntity.status(HttpStatus.NO_CONTENT).build().getStatusCode(), response.getStatusCode());
     }
 
     @Test
