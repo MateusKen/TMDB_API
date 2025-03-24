@@ -1,15 +1,15 @@
 package br.com.projeto.api.servico;
 
 import br.com.projeto.api.modelo.filme.FilmeRepository;
-import br.com.projeto.api.modelo.interacoes.favoritar.DTOFilmeFavorito;
-import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavorito;
-import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavoritoRepository;
+import br.com.projeto.api.modelo.interacoes.favoritar.*;
 import br.com.projeto.api.modelo.usuario.UsuarioRepository;
-import br.com.projeto.api.resources.exceptions.StandardError;
+import br.com.projeto.api.validacao.ValidacaoFavoritar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FavoritarServico {
@@ -23,59 +23,72 @@ public class FavoritarServico {
     @Autowired
     private FilmeFavoritoRepository filmeFavoritoRepository;
 
-    public ResponseEntity<?> favoritar(Long idUsuario, Long idFilme){
-        var usuario = usuarioRepository.findById(idUsuario);
-        var filme = filmeRepository.findById(idFilme);
-        var obj = filmeFavoritoRepository.existsByUsuarioIdAndFilmeId(idUsuario,idFilme);
-        if(usuario.isEmpty() || filme.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possível encontrar um dos campos pedidos");
-        }
-        if(obj){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("O usuário já favoritou esse filme!");
-        }
+    @Autowired
+    private List<ValidacaoFavoritar<?>> validacoes;
+
+    public void favoritar(DTOFavoritar dto){
+
+        validacoes.forEach(v -> {
+            ValidacaoFavoritar<DTOFavoritar> validacao = (ValidacaoFavoritar<DTOFavoritar>) v;
+            validacao.validar(dto);
+        });
+
+        var usuario = usuarioRepository.findById(dto.idUsuario()).get();
+        var filme = filmeRepository.findById(dto.idFilme()).get();
+
         var filmeFavorito = FilmeFavorito.builder()
-                .usuario(usuario.get())
-                .filme(filme.get()).build();
+                .usuario(usuario)
+                .filme(filme).build();
 
         filmeFavoritoRepository.save(filmeFavorito);
-        return new ResponseEntity<>("Filme favorito criado com sucesso!", HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> favoritarAdicionar(Long idFilmeFavorito, Integer rating, String comment){
-        var filme = filmeFavoritoRepository.findById(idFilmeFavorito);
-        System.out.println(idFilmeFavorito);
-        if(filme.isEmpty()){
-            StandardError error = StandardError.NotFound();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-        }else{
-            var filmeFavorito = FilmeFavorito.builder()
-                    .id(idFilmeFavorito)
-                    .filme(filme.get().getFilme())
-                    .usuario(filme.get().getUsuario())
-                    .rating(rating)
-                    .comment(comment).build();
-            filmeFavoritoRepository.save(filmeFavorito);
-            return new ResponseEntity<>("Filme favorito editado com sucesso!", HttpStatus.OK);
-        }
+    public void favoritarAdicionar(DTOFavoritarAdicionar dto){
+
+        validacoes.forEach(v -> {
+            ValidacaoFavoritar<DTOFavoritarAdicionar> validacao = (ValidacaoFavoritar<DTOFavoritarAdicionar>) v;
+            validacao.validar(dto);
+        });
+
+        validacoes.forEach(v -> {
+            ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
+            validacao.validar(dto.idFavorito());
+        });
+
+        var filme = filmeFavoritoRepository.findById(dto.idFavorito()).get();
+
+        var filmeFavorito = FilmeFavorito.builder()
+                .id(filme.getId())
+                .filme(filme.getFilme())
+                .usuario(filme.getUsuario())
+                .rating(dto.rating())
+                .comment(dto.comment()).build();
+
+        filmeFavoritoRepository.save(filmeFavorito);
     }
 
     public ResponseEntity<?> selecionar(){
         return new ResponseEntity<>(filmeFavoritoRepository.findAll(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> selecionarPeloId(Long id){
-        var filmeFavorito = filmeFavoritoRepository.findById(id);
-        if(filmeFavorito.isEmpty()){
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Filme favoritado não encontrado!");
-        }
+    public void selecionarPeloId(Long idFilmeFavorito, DTOFilmeFavorito dtoFilmeFavoritoDestino){
+
+        validacoes.forEach(v -> {
+            ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
+            validacao.validar(idFilmeFavorito);
+        });
+
+        var filmeFavorito = filmeFavoritoRepository.findById(idFilmeFavorito).get();
+
         DTOFilmeFavorito dtoFilme = DTOFilmeFavorito.builder()
-                .id(id)
-                .filme(filmeFavorito.get().getFilme())
-                .idUsuario(filmeFavorito.get().getUsuario().getId())
-                .loginUsuario(filmeFavorito.get().getUsuario().getLogin())
-                .rating(filmeFavorito.get().getRating())
-                .comment(filmeFavorito.get().getComment())
+                .id(filmeFavorito.getId())
+                .filme(filmeFavorito.getFilme())
+                .idUsuario(filmeFavorito.getUsuario().getId())
+                .loginUsuario(filmeFavorito.getUsuario().getLogin())
+                .rating(filmeFavorito.getRating())
+                .comment(filmeFavorito.getComment())
                 .build();
-        return new ResponseEntity<>(dtoFilme, HttpStatus.OK);
+
+        dtoFilmeFavoritoDestino = dtoFilme;
     }
 }

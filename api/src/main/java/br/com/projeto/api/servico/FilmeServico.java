@@ -1,7 +1,9 @@
 package br.com.projeto.api.servico;
 
+import br.com.projeto.api.infra.exception.NotFoundException;
+import br.com.projeto.api.infra.exception.ValidacaoCampoObrigatorioException;
+import br.com.projeto.api.infra.exception.ValidacaoExisteException;
 import br.com.projeto.api.modelo.filme.FilmeRepository;
-import br.com.projeto.api.resources.exceptions.StandardError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +19,14 @@ public class FilmeServico {
     @Autowired
     private FilmeRepository acao;
 
-    public ResponseEntity<?> cadastrar(Filme obj){
+    public void cadastrar(Filme obj)  {
         Optional<Filme> obj2 = Optional.ofNullable(acao.findByTitle(obj.getTitle()));
-
         if(obj.getTitle().isEmpty()){
-            StandardError error = StandardError.BadRequest();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            throw new ValidacaoCampoObrigatorioException("O campo título é obrigatório!");
         }else if(obj2.isPresent()){
-            StandardError error = StandardError.Conflict();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+            throw new ValidacaoExisteException("Filme já cadastrado!");
         } else{
-            return new ResponseEntity<>(acao.save(obj), HttpStatus.CREATED);
+            acao.save(obj);
         }
     }
 
@@ -38,33 +37,28 @@ public class FilmeServico {
     public ResponseEntity<?> selecionarPeloId(Long id){
         Optional<Filme> obj = acao.findById(id);
         if(obj.isEmpty()){
-            StandardError error = StandardError.NotFound();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }else{
             return new ResponseEntity<>(obj.get(), HttpStatus.OK);
         }
     }
 
-    public ResponseEntity<?> editar(Filme obj){
+    public void editar(Filme obj){
         if(acao.countById(obj.getId()) == 0){
-            StandardError error = StandardError.NotFound();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            throw new NotFoundException("Filme não encontrado!");
         }else if(obj.getTitle().isEmpty()){
-            StandardError error = StandardError.BadRequest();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            throw new ValidacaoCampoObrigatorioException("O campo título é obrigatório!");
         }else{
-            return new ResponseEntity<>(acao.save(obj), HttpStatus.OK);
+            acao.save(obj);
         }
     }
 
-    public ResponseEntity<?> remover(Long id){
+    public void remover(Long id){
         Optional<Filme> obj = acao.findById(id);
         if(obj.isPresent()){
             acao.deleteById(id);
-            return new ResponseEntity<>("Filme removido com sucesso!", HttpStatus.NO_CONTENT);
         }
-        StandardError error = StandardError.NotFound();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        throw new NotFoundException("Filme não encontrado!");
     }
 
     public ResponseEntity<?> mostraMaiorNota(){

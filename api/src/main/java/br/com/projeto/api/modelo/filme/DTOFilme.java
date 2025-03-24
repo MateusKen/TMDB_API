@@ -1,7 +1,8 @@
 package br.com.projeto.api.modelo.filme;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
+
 
 @AllArgsConstructor
 @Builder

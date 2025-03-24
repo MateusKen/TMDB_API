@@ -1,11 +1,13 @@
 package br.com.projeto.api.controle;
 
-import br.com.projeto.api.modelo.interacoes.favoritar.DadosFavoritarFilme;
-import br.com.projeto.api.modelo.interacoes.favoritar.DadosTransferenciaFavoritar;
+import br.com.projeto.api.infra.exception.NotFoundException;
+import br.com.projeto.api.infra.exception.ValidacaoExisteException;
+import br.com.projeto.api.modelo.interacoes.favoritar.*;
 import br.com.projeto.api.servico.FavoritarServico;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +20,31 @@ public class FavoritarController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity favoritar(@RequestBody @Valid DadosFavoritarFilme dados){
-        return favoritarServico.favoritar(dados.idUsuario(), dados.idFilme());
+    public ResponseEntity favoritar(@RequestBody @Valid DTOFavoritar dados){
+        try{
+            favoritarServico.favoritar(dados);
+            return ResponseEntity.status(201).body("Filme favoritado com sucesso!");
+        }catch (NotFoundException e){
+            return ResponseEntity.status(404).body(e.getMessage());
+        }catch (ValidacaoExisteException e){
+            return ResponseEntity.status(409).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(500).body("Erro interno no servidor: "+e.getMessage());
+        }
     }
 
     @PutMapping
-    public ResponseEntity favoritarAdicionar(@RequestBody @Valid DadosTransferenciaFavoritar dados){
-        return favoritarServico.favoritarAdicionar(dados.idFilmeFavorito(), dados.rating(), dados.comment());
+    public ResponseEntity favoritarAdicionar(@RequestBody @Valid DTOFavoritarAdicionar dados){
+        try{
+            favoritarServico.favoritarAdicionar(dados);
+            return ResponseEntity.status(200).body("Filme adicionado com sucesso!");
+        }catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(500).body("Erro interno no servidor: "+e.getMessage());
+        }
     }
+
 
     @GetMapping
     public ResponseEntity selecionar(){
@@ -34,6 +53,12 @@ public class FavoritarController {
 
     @GetMapping("/{id}")
     public  ResponseEntity selecionarPorId(@PathVariable @Valid Long id){
-        return favoritarServico.selecionarPeloId(id);
+        try{
+            DTOFilmeFavorito filmeFavorito = null;
+            favoritarServico.selecionarPeloId(id, filmeFavorito);
+            return ResponseEntity.status(200).body(filmeFavorito);
+        }catch (NotFoundException e){
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

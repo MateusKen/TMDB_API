@@ -1,5 +1,8 @@
 package br.com.projeto.api.controle;
 
+import br.com.projeto.api.infra.exception.NotFoundException;
+import br.com.projeto.api.infra.exception.ValidacaoCampoObrigatorioException;
+import br.com.projeto.api.infra.exception.ValidacaoExisteException;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.projeto.api.modelo.filme.Filme;
@@ -23,8 +26,17 @@ public class FilmeControle {
     private FilmeServico filmeServico;
 
     @PostMapping("/api")
-    public ResponseEntity<?> cadastrar(@RequestBody Filme obj){
-        return filmeServico.cadastrar(obj);
+    public ResponseEntity<String> cadastrar(@RequestBody Filme obj){
+        try{
+            this.filmeServico.cadastrar(obj);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Filme cadastrado com sucesso!");
+        }catch (ValidacaoExisteException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (ValidacaoCampoObrigatorioException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar filme!");
+        }
     }
 
     @GetMapping("/api")
@@ -44,12 +56,25 @@ public class FilmeControle {
 
     @PutMapping("/api")
     public ResponseEntity<?> editar(@RequestBody Filme obj) {
-        return filmeServico.editar(obj);
+
+        try{
+            filmeServico.editar(obj);
+            return ResponseEntity.status(HttpStatus.OK).body("Filme editado com sucesso!");
+        }catch (ValidacaoCampoObrigatorioException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/api/{id}")
     public ResponseEntity<?> remover(@PathVariable Long id){
-        return filmeServico.remover(id);
+        try{
+            filmeServico.remover(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Filme removido com sucesso!");
+        }catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/api/maiorNota")
