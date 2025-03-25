@@ -24,5 +24,10 @@ public class ValidacaoNotFoundFavoritar implements ValidacaoFavoritar<DTOFavorit
             throw new NotFoundException("Usuário ou filme não encontrado!");
         }
     }
+
+    @Override
+    public Class<DTOFavoritar> getTipo(){
+        return DTOFavoritar.class;
+    }
 }
 

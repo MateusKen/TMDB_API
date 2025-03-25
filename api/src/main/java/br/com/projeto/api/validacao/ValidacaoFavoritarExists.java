@@ -19,4 +19,9 @@ public class ValidacaoFavoritarExists implements ValidacaoFavoritar<DTOFavoritar
             throw new ValidacaoExisteException("Filme já favoritado!");
         }
     }
+
+    @Override
+    public Class<DTOFavoritar> getTipo(){
+        return DTOFavoritar.class;
+    }
 }

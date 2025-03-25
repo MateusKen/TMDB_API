@@ -7,9 +7,10 @@ import br.com.projeto.api.servico.FavoritarServico;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/favoritar")
@@ -48,14 +49,14 @@ public class FavoritarController {
 
     @GetMapping
     public ResponseEntity selecionar(){
-        return favoritarServico.selecionar();
+        List<DTOFilmeFavorito> filmesFavoritos = favoritarServico.selecionar();
+        return ResponseEntity.status(200).body(filmesFavoritos);
     }
 
     @GetMapping("/{id}")
     public  ResponseEntity selecionarPorId(@PathVariable @Valid Long id){
         try{
-            DTOFilmeFavorito filmeFavorito = null;
-            favoritarServico.selecionarPeloId(id, filmeFavorito);
+            DTOFilmeFavorito filmeFavorito = favoritarServico.selecionarPeloId(id);
             return ResponseEntity.status(200).body(filmeFavorito);
         }catch (NotFoundException e){
             return ResponseEntity.status(404).body(e.getMessage());

@@ -29,8 +29,10 @@ public class FavoritarServico {
     public void favoritar(DTOFavoritar dto){
 
         validacoes.forEach(v -> {
-            ValidacaoFavoritar<DTOFavoritar> validacao = (ValidacaoFavoritar<DTOFavoritar>) v;
-            validacao.validar(dto);
+            if(v.getTipo().isInstance(dto)){
+                ValidacaoFavoritar<DTOFavoritar> validacao = (ValidacaoFavoritar<DTOFavoritar>) v;
+                validacao.validar(dto);
+            }
         });
 
         var usuario = usuarioRepository.findById(dto.idUsuario()).get();
@@ -46,13 +48,10 @@ public class FavoritarServico {
     public void favoritarAdicionar(DTOFavoritarAdicionar dto){
 
         validacoes.forEach(v -> {
-            ValidacaoFavoritar<DTOFavoritarAdicionar> validacao = (ValidacaoFavoritar<DTOFavoritarAdicionar>) v;
-            validacao.validar(dto);
-        });
-
-        validacoes.forEach(v -> {
-            ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
-            validacao.validar(dto.idFavorito());
+            if(v.getTipo().isInstance(dto.idFavorito())){
+                ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
+                validacao.validar(dto.idFavorito());
+            }
         });
 
         var filme = filmeFavoritoRepository.findById(dto.idFavorito()).get();
@@ -67,28 +66,39 @@ public class FavoritarServico {
         filmeFavoritoRepository.save(filmeFavorito);
     }
 
-    public ResponseEntity<?> selecionar(){
-        return new ResponseEntity<>(filmeFavoritoRepository.findAll(), HttpStatus.OK);
+    public List<DTOFilmeFavorito> selecionar() {
+        List<FilmeFavorito> filmesFavoritos = filmeFavoritoRepository.findAll();
+
+        return filmesFavoritos.stream()
+                .map(filmeFavorito -> new DTOFilmeFavorito(
+                        filmeFavorito.getId(),
+                        filmeFavorito.getFilme(),
+                        filmeFavorito.getUsuario().getId(),
+                        filmeFavorito.getUsuario().getLogin(),
+                        filmeFavorito.getRating(),
+                        filmeFavorito.getComment()
+                ))
+                .toList();
     }
 
-    public void selecionarPeloId(Long idFilmeFavorito, DTOFilmeFavorito dtoFilmeFavoritoDestino){
+    public DTOFilmeFavorito selecionarPeloId(Long idFilmeFavorito){
 
         validacoes.forEach(v -> {
-            ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
-            validacao.validar(idFilmeFavorito);
+            if(v.getTipo().isInstance(idFilmeFavorito)){
+                ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
+                validacao.validar(idFilmeFavorito);
+            }
         });
 
         var filmeFavorito = filmeFavoritoRepository.findById(idFilmeFavorito).get();
 
-        DTOFilmeFavorito dtoFilme = DTOFilmeFavorito.builder()
-                .id(filmeFavorito.getId())
+        return DTOFilmeFavorito.builder()
+                .id(idFilmeFavorito)
                 .filme(filmeFavorito.getFilme())
                 .idUsuario(filmeFavorito.getUsuario().getId())
                 .loginUsuario(filmeFavorito.getUsuario().getLogin())
                 .rating(filmeFavorito.getRating())
                 .comment(filmeFavorito.getComment())
                 .build();
-
-        dtoFilmeFavoritoDestino = dtoFilme;
     }
 }

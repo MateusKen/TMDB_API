@@ -18,4 +18,9 @@ public class ValidarNotFoundFilmeFavorito implements ValidacaoFavoritar<Long> {
             throw new NotFoundException("Filme favorito não encontrado!");
         }
     }
+
+    @Override
+    public Class<Long> getTipo(){
+        return Long.class;
+    }
 }
