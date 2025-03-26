@@ -2,6 +2,7 @@ package br.com.projeto.api.servico;
 
 import br.com.projeto.api.modelo.filme.FilmeRepository;
 import br.com.projeto.api.modelo.interacoes.favoritar.*;
+import br.com.projeto.api.modelo.usuario.DTOUsuario;
 import br.com.projeto.api.modelo.usuario.UsuarioRepository;
 import br.com.projeto.api.validacao.ValidacaoFavoritar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +74,9 @@ public class FavoritarServico {
                 .map(filmeFavorito -> new DTOFilmeFavorito(
                         filmeFavorito.getId(),
                         filmeFavorito.getFilme(),
-                        filmeFavorito.getUsuario().getId(),
-                        filmeFavorito.getUsuario().getLogin(),
+                        new DTOUsuario(
+                                filmeFavorito.getUsuario().getId(),
+                                filmeFavorito.getUsuario().getLogin()),
                         filmeFavorito.getRating(),
                         filmeFavorito.getComment()
                 ))
@@ -95,8 +97,7 @@ public class FavoritarServico {
         return DTOFilmeFavorito.builder()
                 .id(idFilmeFavorito)
                 .filme(filmeFavorito.getFilme())
-                .idUsuario(filmeFavorito.getUsuario().getId())
-                .loginUsuario(filmeFavorito.getUsuario().getLogin())
+                .usuario(new DTOUsuario(filmeFavorito.getUsuario().getId(),filmeFavorito.getUsuario().getLogin()))
                 .rating(filmeFavorito.getRating())
                 .comment(filmeFavorito.getComment())
                 .build();

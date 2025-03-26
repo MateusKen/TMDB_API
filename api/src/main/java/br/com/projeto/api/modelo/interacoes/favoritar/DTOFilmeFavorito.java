@@ -1,6 +1,7 @@
 package br.com.projeto.api.modelo.interacoes.favoritar;
 
 import br.com.projeto.api.modelo.filme.Filme;
+import br.com.projeto.api.modelo.usuario.DTOUsuario;
 import lombok.*;
 
 @Getter @Setter
@@ -10,8 +11,7 @@ import lombok.*;
 public class DTOFilmeFavorito{
     private Long id;
     private Filme filme;
-    private Long idUsuario;
-    private String loginUsuario;
+    private DTOUsuario usuario;
     private Integer rating;
     private String comment;
 }
