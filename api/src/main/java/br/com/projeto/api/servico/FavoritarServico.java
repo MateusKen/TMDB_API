@@ -4,10 +4,8 @@ import br.com.projeto.api.modelo.filme.FilmeRepository;
 import br.com.projeto.api.modelo.interacoes.favoritar.*;
 import br.com.projeto.api.modelo.usuario.DTOUsuario;
 import br.com.projeto.api.modelo.usuario.UsuarioRepository;
-import br.com.projeto.api.validacao.ValidacaoFavoritar;
+import br.com.projeto.api.validacao.filme_favorito.ValidacaoFavoritar;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +29,8 @@ public class FavoritarServico {
 
         validacoes.forEach(v -> {
             if(v.getTipo().isInstance(dto)){
-                ValidacaoFavoritar<DTOFavoritar> validacao = (ValidacaoFavoritar<DTOFavoritar>) v;
-                validacao.validar(dto);
+                ValidacaoFavoritar<DTOFavoritar> validacaoFavoritar = (ValidacaoFavoritar<DTOFavoritar>) v;
+                validacaoFavoritar.validar(dto);
             }
         });
 
@@ -50,8 +48,8 @@ public class FavoritarServico {
 
         validacoes.forEach(v -> {
             if(v.getTipo().isInstance(dto.idFavorito())){
-                ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
-                validacao.validar(dto.idFavorito());
+                ValidacaoFavoritar<Long> validacaoFavoritar = (ValidacaoFavoritar<Long>) v;
+                validacaoFavoritar.validar(dto.idFavorito());
             }
         });
 
@@ -87,8 +85,8 @@ public class FavoritarServico {
 
         validacoes.forEach(v -> {
             if(v.getTipo().isInstance(idFilmeFavorito)){
-                ValidacaoFavoritar<Long> validacao = (ValidacaoFavoritar<Long>) v;
-                validacao.validar(idFilmeFavorito);
+                ValidacaoFavoritar<Long> validacaoFavoritar = (ValidacaoFavoritar<Long>) v;
+                validacaoFavoritar.validar(idFilmeFavorito);
             }
         });
 

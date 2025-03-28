@@ -4,18 +4,17 @@ import br.com.projeto.api.infra.exception.NotFoundException;
 import br.com.projeto.api.infra.exception.ValidacaoExisteException;
 import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.modelo.filme.FilmeRepository;
-import br.com.projeto.api.modelo.interacoes.favoritar.DTOFavoritar;
-import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavorito;
-import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavoritoRepository;
+import br.com.projeto.api.modelo.interacoes.favoritar.*;
 import br.com.projeto.api.modelo.usuario.Usuario;
 import br.com.projeto.api.modelo.usuario.UsuarioRepository;
-import br.com.projeto.api.validacao.ValidacaoFavoritar;
-import br.com.projeto.api.validacao.ValidacaoFavoritarExists;
+import br.com.projeto.api.validacao.filme_favorito.ValidacaoFavoritar;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +36,13 @@ class FavoritarServicoTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
-    private List<ValidacaoFavoritar<DTOFavoritar>> validacoes;
+    private FilmeRepository filmeRepository;
 
     @Mock
-    private FilmeRepository filmeRepository;
+    private ValidacaoFavoritar<DTOFavoritar> DTOFavoritarValidacaoFavoritarMock;
+
+    @Mock
+    private ValidacaoFavoritar<Long> longValidacaoFavoritarMock;
 
     public static final Long ID = 1L;
 
@@ -51,76 +53,82 @@ class FavoritarServicoTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        List<ValidacaoFavoritar<?>> validacoes = List.of(DTOFavoritarValidacaoFavoritarMock, longValidacaoFavoritarMock);
+        ReflectionTestUtils.setField(favoritarServico, "validacoes", validacoes);
+
+        when(DTOFavoritarValidacaoFavoritarMock.getTipo()).thenReturn(DTOFavoritar.class);
+        when(longValidacaoFavoritarMock.getTipo()).thenReturn(Long.class);
+
         startFilme();
         startUsuario();
         startFilmeFavorito();
     }
 
     @Test
-    void whenFavoritarReturnsNotFound() {
-
-        doAnswer(invocation -> {
-            throw new NotFoundException("Erro na validação");
-        }).when(validacoes).forEach(any());
-
+    @DisplayName("Verifica se função entra na exception NotFoundException")
+    void whenFavoritarThrowsNotFound() {
+        doThrow(new NotFoundException("Erro na validação")).when(DTOFavoritarValidacaoFavoritarMock).validar(any());
         assertThrows(NotFoundException.class, () -> favoritarServico.favoritar(new DTOFavoritar(1L,1L)));
     }
 
     @Test
-    void whenFavoritarReturnsConflict() {
-        doAnswer(invocation -> {
-            throw new ValidacaoExisteException("Erro na validação");
-        }).when(validacoes).forEach(any());
-
+    @DisplayName("Verifica se método entra na exception ValidacaoExisteException")
+    void whenFavoritarThrowsConflict() {
+        doThrow(new ValidacaoExisteException("")).when(DTOFavoritarValidacaoFavoritarMock).validar(any());
         assertThrows(ValidacaoExisteException.class, () -> favoritarServico.favoritar(new DTOFavoritar(1L,1L)));
     }
 
     @Test
-    void whenFavoritarReturnsCreated(){
-
-        doNothing().when(validacoes).forEach(any());
-
+    @DisplayName("Envia os dois IDs pedidos e verifica se .save() é chamada ao final")
+    void whenFavoritarSaves(){
+        doNothing().when(DTOFavoritarValidacaoFavoritarMock).validar(any());
         when(filmeRepository.findById(anyLong())).thenReturn(Optional.of(filme));
         when(usuarioRepository.findById(anyLong())).thenReturn(Optional.of(usuario));
-
+        favoritarServico.favoritar(new DTOFavoritar(1L, 1L));
         verify(filmeFavoritoRepository, times(1)).save(any(FilmeFavorito.class));
     }
-//
-//    @Test
-//    void whenFavoritoAdicionarReturnsNotFound() {
-//        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.empty());
-//        var response = favoritarServico.favoritarAdicionar(ID, 10, "comment");
-//        assertEquals(404, response.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    void whenFavoritoAdicionarReturnsOk() {
-//        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.of(filmeFavorito));
-//        var response = favoritarServico.favoritarAdicionar(ID, 10, "comment");
-//        assertEquals(200, response.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    void whenSelecionarReturnsOk() {
-//        when(filmeFavoritoRepository.findAll()).thenReturn(List.of(filmeFavorito));
-//        var response = favoritarServico.selecionar();
-//        assertEquals(200, response.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    void whenSelecionarPorIdReturnsNotFound() {
-//        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.empty());
-//        var response = favoritarServico.selecionarPeloId(ID);
-//        assertEquals(404, response.getStatusCodeValue());
-//    }
-//
-//    @Test
-//    void whenSelecionarPorIdReturnsOk(){
-//        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.of(filmeFavorito));
-//        var response = favoritarServico.selecionarPeloId(ID);
-//        assertEquals(200, response.getStatusCodeValue());
-//    }
-//
+
+    @Test
+    @DisplayName("Verifica se entra na exception NotFoundException")
+    void whenFavoritoAdicionarThrowsNotFound() {
+        doThrow(new NotFoundException("")).when(longValidacaoFavoritarMock).validar(any());
+        assertThrows(NotFoundException.class, () -> favoritarServico.favoritarAdicionar(new DTOFavoritarAdicionar(1L, "", 1)));
+    }
+
+    @Test
+    @DisplayName("Verifica se .save() é chamada no final")
+    void whenFavoritoAdicionarSaves() {
+        doNothing().when(longValidacaoFavoritarMock).validar(any());
+        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.of(filmeFavorito));
+        favoritarServico.favoritarAdicionar(new DTOFavoritarAdicionar(1L, "a", 1));
+        verify(filmeFavoritoRepository, times(1)).save(any(FilmeFavorito.class));
+    }
+
+    @Test
+    @DisplayName("É para retornar uma lista de DTOFilmeFavorito ao final")
+    void whenSelecionarListOfDTOFilmeFavorito() {
+        when(filmeFavoritoRepository.findAll()).thenReturn(List.of(filmeFavorito));
+        List<DTOFilmeFavorito> filmesFavoritos = favoritarServico.selecionar();
+        assertEquals(DTOFilmeFavorito.class, filmesFavoritos.get(0).getClass());
+    }
+
+    @Test
+    @DisplayName("Chama método selecionarPorId e verifica se lança exception NotFoundException")
+    void whenSelecionarPorIdReturnsNotFound() {
+        doThrow(new NotFoundException("")).when(longValidacaoFavoritarMock).validar(any());
+        assertThrows(NotFoundException.class, ()->favoritarServico.selecionarPeloId(1L));
+    }
+
+    @Test
+    @DisplayName("Verifica se selecionarPeloId retorna um DTOFilmeFavorito")
+    void whenSelecionarPorIdReturnsOk(){
+        doNothing().when(longValidacaoFavoritarMock).validar(any());
+        when(filmeFavoritoRepository.findById(anyLong())).thenReturn(Optional.of(filmeFavorito));
+        DTOFilmeFavorito filmeFavoritoMock = favoritarServico.selecionarPeloId(1L);
+        assertEquals(DTOFilmeFavorito.class, filmeFavoritoMock.getClass());
+    }
+
     private void startFilme(){
         filme = Filme.builder()
                 .id(ID)

@@ -1,13 +1,9 @@
 package br.com.projeto.api.validacao;
 
 import br.com.projeto.api.infra.exception.NotFoundException;
-import br.com.projeto.api.modelo.filme.Filme;
-import br.com.projeto.api.modelo.filme.FilmeRepository;
-import br.com.projeto.api.modelo.interacoes.favoritar.DTOFavoritar;
 import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavorito;
 import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavoritoRepository;
-import br.com.projeto.api.modelo.usuario.Usuario;
-import br.com.projeto.api.modelo.usuario.UsuarioRepository;
+import br.com.projeto.api.validacao.filme_favorito.Long.ValidarNotFoundFilmeFavorito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

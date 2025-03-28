@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
+
 
 @RestController
 public class FilmeControle {
@@ -41,7 +43,8 @@ public class FilmeControle {
 
     @GetMapping("/api")
     public ResponseEntity<?> selecionar() {
-        return filmeServico.selecionar();
+        List<Filme> filmes = filmeServico.selecionar();
+        return ResponseEntity.status(200).body(filmes);
     }
 
     @GetMapping("")
@@ -51,7 +54,13 @@ public class FilmeControle {
 
     @GetMapping("/api/{id}")
     public ResponseEntity<?> selecionarPeloId(@PathVariable Long id) {
-        return filmeServico.selecionarPeloId(id);
+
+        try{
+            var filme = filmeServico.selecionarPeloId(id);
+            return ResponseEntity.status(200).body(filme);
+        }catch (NotFoundException e){
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PutMapping("/api")
@@ -79,12 +88,14 @@ public class FilmeControle {
 
     @GetMapping("/api/maiorNota")
     public ResponseEntity<?> maiorNota() {
-        return filmeServico.mostraMaiorNota();
+        var filmeMaiorNota = filmeServico.mostraMaiorNota();
+        return ResponseEntity.status(200).body(filmeMaiorNota);
     }
 
     @GetMapping("/api/popularidadeMaiorQue/{n}")
     public ResponseEntity<?> popularidadeMaiorQue(@PathVariable float n) {
-        return filmeServico.mostraPopularidadeMaiorQue(n);
+        var filmesPopularidade = filmeServico.mostraPopularidadeMaiorQue(n);
+        return ResponseEntity.status(200).body(filmesPopularidade);
     }
 
     @GetMapping("/status")

@@ -1,14 +1,15 @@
-package br.com.projeto.api.validacao;
+package br.com.projeto.api.validacao.filme_favorito.DTOFavoritar;
 
 import br.com.projeto.api.infra.exception.NotFoundException;
 import br.com.projeto.api.modelo.filme.FilmeRepository;
 import br.com.projeto.api.modelo.interacoes.favoritar.DTOFavoritar;
 import br.com.projeto.api.modelo.usuario.UsuarioRepository;
+import br.com.projeto.api.validacao.filme_favorito.ValidacaoFavoritar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidacaoNotFoundFavoritar implements ValidacaoFavoritar<DTOFavoritar>{
+public class ValidacaoFavoritarNotFoundFilmeFavorito implements ValidacaoFavoritar<DTOFavoritar> {
 
     @Autowired
     private UsuarioRepository usuarioRepository;

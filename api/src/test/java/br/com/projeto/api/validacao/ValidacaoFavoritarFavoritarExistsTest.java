@@ -1,11 +1,9 @@
 package br.com.projeto.api.validacao;
 
 import br.com.projeto.api.infra.exception.ValidacaoExisteException;
-import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.modelo.interacoes.favoritar.DTOFavoritar;
-import br.com.projeto.api.modelo.interacoes.favoritar.DTOFilmeFavorito;
 import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavoritoRepository;
-import br.com.projeto.api.modelo.usuario.DTOUsuario;
+import br.com.projeto.api.validacao.filme_favorito.DTOFavoritar.ValidacaoFavoritarExistsFilmeFavorito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,10 +16,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-class ValidacaoFavoritarExistsTest {
+class ValidacaoFavoritarFavoritarExistsTest {
 
     @InjectMocks
-    private ValidacaoFavoritarExists validacao;
+    private ValidacaoFavoritarExistsFilmeFavorito validacao;
 
     @Mock
     private FilmeFavoritoRepository filmeFavoritoRepository;

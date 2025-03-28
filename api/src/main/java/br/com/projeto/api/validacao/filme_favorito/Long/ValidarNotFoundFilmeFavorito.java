@@ -1,12 +1,13 @@
-package br.com.projeto.api.validacao;
+package br.com.projeto.api.validacao.filme_favorito.Long;
 
 import br.com.projeto.api.infra.exception.NotFoundException;
 import br.com.projeto.api.modelo.interacoes.favoritar.FilmeFavoritoRepository;
+import br.com.projeto.api.validacao.filme.ValidacaoFilme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidarNotFoundFilmeFavorito implements ValidacaoFavoritar<Long> {
+public class ValidarNotFoundFilmeFavorito implements ValidacaoFilme<Long> {
 
     @Autowired
     private FilmeFavoritoRepository filmeFavoritoRepository;
