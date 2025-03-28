@@ -1,7 +1,6 @@
 package br.com.projeto.api.validacao.filme.Filme;
 
 import br.com.projeto.api.infra.exception.NotFoundException;
-import br.com.projeto.api.infra.exception.ValidacaoCampoObrigatorioException;
 import br.com.projeto.api.modelo.filme.Filme;
 import br.com.projeto.api.modelo.filme.FilmeRepository;
 import br.com.projeto.api.validacao.filme.ValidacaoFilme;

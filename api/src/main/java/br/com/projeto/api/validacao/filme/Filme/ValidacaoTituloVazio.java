@@ -13,7 +13,6 @@ public class ValidacaoTituloVazio implements ValidacaoFilme<Filme> {
     @Autowired
     private FilmeRepository filmeRepository;
 
-
     @Override
     public void validar(Filme dto) {
         var titulo = dto.getTitle();
