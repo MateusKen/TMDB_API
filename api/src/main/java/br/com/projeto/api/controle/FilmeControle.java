@@ -80,7 +80,7 @@ public class FilmeControle {
     public ResponseEntity<?> remover(@PathVariable Long id){
         try{
             filmeServico.remover(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Filme removido com sucesso!");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT  ).body("Filme removido com sucesso!");
         }catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
