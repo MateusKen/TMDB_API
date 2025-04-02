@@ -3,6 +3,8 @@ package br.com.projeto.api.controle;
 import br.com.projeto.api.infra.exception.NotFoundException;
 import br.com.projeto.api.infra.exception.ValidacaoCampoObrigatorioException;
 import br.com.projeto.api.infra.exception.ValidacaoExisteException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.projeto.api.modelo.filme.Filme;
@@ -28,6 +30,8 @@ public class FilmeControle {
     private FilmeServico filmeServico;
 
     @PostMapping("/api")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Salvar filme", description = "Usuário passa as informações necessárias para a criação do filme no sistema")
     public ResponseEntity<String> cadastrar(@RequestBody Filme obj){
         try{
             this.filmeServico.cadastrar(obj);
@@ -42,17 +46,23 @@ public class FilmeControle {
     }
 
     @GetMapping("/api")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Mostra todos os filme", description = "Sistema retorna todos os filmes cadastrados")
     public ResponseEntity<?> selecionar() {
         List<Filme> filmes = filmeServico.selecionar();
         return ResponseEntity.status(200).body(filmes);
     }
 
     @GetMapping("")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Mostra Hello World na tela")
     public String mensagem(){
-        return "Hello World 1";
+        return "Hello World";
     }
 
     @GetMapping("/api/{id}")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Mostra filme pelo id", description = "Usuário envia id de um filme pela url e sistema retorna o filme")
     public ResponseEntity<?> selecionarPeloId(@PathVariable Long id) {
 
         try{
@@ -64,6 +74,8 @@ public class FilmeControle {
     }
 
     @PutMapping("/api")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Editar informações de um filme", description = "Usuário passa todos os dados novos do filme e sistema salva essa alteração")
     public ResponseEntity<?> editar(@RequestBody Filme obj) {
 
         try{
@@ -77,6 +89,8 @@ public class FilmeControle {
     }
 
     @DeleteMapping("/api/{id}")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Remove filme", description = "Sistema usa id informado na url para remover filme do sistema")
     public ResponseEntity<?> remover(@PathVariable Long id){
         try{
             filmeServico.remover(id);
@@ -87,18 +101,24 @@ public class FilmeControle {
     }
 
     @GetMapping("/api/maiorNota")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Mostra filme com a maior nota")
     public ResponseEntity<?> maiorNota() {
         var filmeMaiorNota = filmeServico.mostraMaiorNota();
         return ResponseEntity.status(200).body(filmeMaiorNota);
     }
 
     @GetMapping("/api/popularidadeMaiorQue/{n}")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Mostra filmes com popularidade maior que n", description = "Recebe um número n e usa ele para fazer uma busca no banco de dados de filmes que possuem uma popularidade maior que n")
     public ResponseEntity<?> popularidadeMaiorQue(@PathVariable float n) {
         var filmesPopularidade = filmeServico.mostraPopularidadeMaiorQue(n);
         return ResponseEntity.status(200).body(filmesPopularidade);
     }
 
     @GetMapping("/status")
+    @SecurityRequirement(name = "bearer-key")
+    @Operation(summary = "Retorna o status 201 CREATED")
     public ResponseEntity<?> status() {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
