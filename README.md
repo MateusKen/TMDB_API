@@ -105,6 +105,8 @@ spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 ```
 
+> **⚠️ Atenção de Segurança:** Em ambientes de produção, NUNCA utilize credenciais hardcoded. Use variáveis de ambiente, serviços de gerenciamento de segredos (como AWS Secrets Manager, Azure Key Vault) ou arquivos de configuração criptografados.
+
 ### Variáveis de Ambiente
 
 Configure as seguintes variáveis de ambiente ou crie um arquivo `.env`:
@@ -185,7 +187,7 @@ Authorization: Bearer {seu_token_jwt}
 
 {
   "title": "Clube da Luta",
-  "overview": "É um filme que em que se luta e não se fala sobre clube da luta",
+  "overview": "É um filme em que se luta e não se fala sobre clube da luta",
   "release_date": "10-29-1999",
   "popularity": 14.4,
   "vote_average": 6.89,
